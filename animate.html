@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animation & Preferences Demo</title>
+    <style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spin-animation {
+            animation: spin 2s linear;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background-color: #45a049;
+        }
+
+        #logo {
+            width: 100px;
+            margin: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: white;
+        }
+
+        body.dark-mode button {
+            background-color: #666;
+        }
+
+        #clickCount {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <button id="animateBtn">✨ Animate Image</button>
+    <button id="themeBtn">🌓 Toggle Theme</button>
+    <img id="logo" src="https://via.placeholder.com/100" alt="Demo Image">
+    <div id="clickCount"></div>
+
+    <script>
+        // Animation handler
+        document.getElementById('animateBtn').addEventListener('click', () => {
+            const logo = document.getElementById('logo');
+            
+            // Trigger spin animation
+            logo.classList.add('spin-animation');
+            logo.addEventListener('animationend', () => {
+                logo.classList.remove('spin-animation');
+            }, { once: true });
+
+            // Update and store click count
+            const clicks = (parseInt(localStorage.getItem('animationCount')) || 0) + 1;
+            localStorage.setItem('animationCount', clicks);
+            updateClickDisplay(clicks);
+        });
+
+        // Theme handler
+        document.getElementById('themeBtn').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        });
+
+        // Update click display
+        function updateClickDisplay(count) {
+            document.getElementById('clickCount').textContent = `Animations Triggered: ${count}`;
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            // Load theme preference
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            document.body.classList.toggle('dark-mode', darkMode);
+
+            // Load animation count
+            const savedCount = localStorage.getItem('animationCount') || 0;
+            updateClickDisplay(savedCount);
+        });
+    </script>
+</body>
+</html>
